@@ -1,0 +1,97 @@
+#include <random>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <math.h>
+#ifdef __WIN32__
+#include <openssl/sha.h>
+#include <conio.h>
+#elif __APPLE__
+#include <termios.h>
+#include <unistd.h>
+#include <CommonCrypto/CommonDigest.h>
+#endif
+#include <iomanip>
+
+class Security{
+public:
+    static void hideKey(std::string& key){
+        #ifdef __WIN32__
+            char ch;
+
+            while((ch = _getch()) != '\r'){
+                if(ch == '\b'){
+                    if(!key.empty()){
+                        key.pop_back();
+                        std::cout << "\b \b";
+                    }
+                } else {
+                    std::cout << '*';
+                    key += ch;
+                }
+            }
+        #elif __APPLE__
+            termios oldt, newt;
+            tcgetattr(STDIN_FILENO, &oldt);
+            newt = oldt;
+
+            newt.c_lflag &= ~(ECHO|ICANON);
+            tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+            std::cout << std::flush;
+            char ch;
+            while (true)
+            {
+                if (read(STDIN_FILENO, &ch, 1) != 1)
+                continue;
+
+                if (ch == '\n' || ch == '\r')
+                break;
+
+                if (ch == 127 || ch == 8)
+                {
+                    if (!key.empty())
+                    {
+                        key.pop_back();
+                        std::cout << "\b \b" << std::flush;
+                    }
+                }
+                else
+                {
+                    key.push_back(ch);
+                    std::cout << '*' << std::flush;
+                }
+            }
+
+            tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        #endif
+    }
+
+    static std::string sha256(const std::string& input) {
+        #if __WIN32__
+            unsigned char hash[SHA256_DIGEST_LENGTH];
+            SHA256(reinterpret_cast<const unsigned char*>(input.data()),input.size(), hash);
+    
+            std::ostringstream oss;
+            for (unsigned char c : hash)
+                oss << std::hex << std::setw(2) << std::setfill('0') << (int)c;
+            return oss.str();
+        #elif __APPLE__
+            unsigned char hash[CC_SHA256_DIGEST_LENGTH];
+            CC_SHA256(input.data(), (CC_LONG)input.size(), hash);
+            std::ostringstream oss;
+            for(unsigned char c : hash)
+                oss << std::hex << std::setw(2) << std::setfill('0') << (int)c;
+            return oss.str();
+        #endif
+    }
+
+    static bool comparePasswords(const std::string& shaInput, const std::string& cleanInput){
+        return shaInput == sha256(cleanInput);
+    }
+
+    static std::string generateStrongPassword(){
+        //TODO: Create actual strong password generation
+        return "password";
+    }
+};
