@@ -7,12 +7,15 @@
 #ifdef __WIN32__
 #include <openssl/sha.h>
 #include <conio.h>
+#include <windows.h>
+#include <bcrypt.h>
 #elif __APPLE__
 #include <termios.h>
 #include <unistd.h>
 #include <CommonCrypto/CommonDigest.h>
 #endif
 #include <iomanip>
+#pragma comment(lib, "bcrypt.lib")
 
 class Security{
 public:
@@ -90,8 +93,32 @@ public:
         return shaInput == sha256(cleanInput);
     }
 
+    static bool getSecureRandomBytes(void* buf, ULONG bufSize){
+        if(!buf || bufSize == 0) return false;
+
+        NTSTATUS status = BCryptGenRandom(
+            nullptr,
+            static_cast<PUCHAR>(buf),
+            bufSize,
+            BCRYPT_USE_SYSTEM_PREFERRED_RNG
+        );
+
+        return BCRYPT_SUCCESS(status);
+    }
+
     static std::string generateStrongPassword(){
         //TODO: Create actual strong password generation
-        return "password";
+        std::string _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$^&*()-_+={}[]|;:',./";
+
+        std::vector<uint8_t> randomBytes(16);
+        std::string password = "";
+
+        getSecureRandomBytes(randomBytes.data(), static_cast<ULONG>(randomBytes.size()));
+
+        for(uint8_t i : randomBytes){
+            password += _alphabet[i % _alphabet.size()];
+        }
+
+        return password;
     }
 };

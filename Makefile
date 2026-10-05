@@ -1,7 +1,7 @@
 # Compiler
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Ipublic
-LDFLAGS = -lcrypto
+LDFLAGS = -lcrypto -lbcrypt
 
 # Directories
 SRC_DIR = private
