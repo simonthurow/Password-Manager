@@ -29,7 +29,7 @@ public:
         #elif __APPLE__
             FILE* pipe = popen("pbcopy", "w");
             if(!pipe) std::abort();
-            fwrite(passC, sizeof(char), pass.size(), pipe);
+            fwrite(passC, sizeof(char), password.size(), pipe);
             pclose(pipe);
         #endif 
     }
