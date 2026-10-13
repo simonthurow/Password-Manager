@@ -120,7 +120,7 @@ public:
         getSecureRandomBytes(randomBytes.data(), static_cast<ULONG>(randomBytes.size()));
 #elif __APPLE__
         int r = SecRandomCopyBytes(kSecRandomDefault, randomBytes.size(), &(randomBytes[0]));
-        if(!r) {
+        if(r) {
             std::cout << "Failure to create random bytes!" << std::endl;
             return "password";
         }

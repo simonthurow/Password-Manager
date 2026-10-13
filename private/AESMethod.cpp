@@ -23,8 +23,8 @@ public:
    if(in.size() % 2 != 0) throw std::runtime_error("Invalid stored data");
    auto val = [](char c) -> int {
       if(c >= '0' && c <= '9') return c - '0';
-      if(c >= 'a' && c <= 'f') return c - 'a' + 10;
-      //throw std::runtime_error("Invalid stored data");
+      //if(c >= 'a' && c <= 'f') return c - 'a' + 10;
+      return c - 'a' + 10;
    };
    std::string out;
    out.reserve(in.size() / 2);
