@@ -1,7 +1,8 @@
 # Compiler
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Ipublic -D USE_CXX_AES
-LDFLAGS = -lcrypto -lbcrypt
+# LDFLAGS = -lcrypto -lbcrypt
+LDFLAGS = -framework Security
 
 # Directories
 SRC_DIR = private
@@ -32,8 +33,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-# Clean
+# clean
+
+# clean:
+# 	del /Q $(OBJ_DIR) $(TARGET).exe
 clean:
-	del /Q $(OBJ_DIR) $(TARGET).exe
+	rm -rf $(OBJ_DIR) $(TARGET)
 
 .PHONY: all clean
