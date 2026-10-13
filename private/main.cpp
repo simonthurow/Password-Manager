@@ -21,9 +21,9 @@ int main(int argc, char *argv[]){
 
         std::string key;
         Security::hideKey(key);
-        std::string director = "data/";
+        std::string directory = "data/";
         std::cout << std::endl;
-        std::ofstream file(director.append(argv[2]));
+        std::ofstream file(directory.append(argv[2]));
         if(!file) return 1;
         file << Security::sha256(key) << "\n";
         file.close();
