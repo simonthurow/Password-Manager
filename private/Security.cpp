@@ -13,9 +13,10 @@
 #include <termios.h>
 #include <unistd.h>
 #include <CommonCrypto/CommonDigest.h>
+#include <Security/Security.h>
 #endif
 #include <iomanip>
-#pragma comment(lib, "bcrypt.lib")
+//#pragma comment(lib, "bcrypt.lib")
 
 class Security{
 public:
@@ -93,6 +94,7 @@ public:
         return shaInput == sha256(cleanInput);
     }
 
+#if __WIN32__
     static bool getSecureRandomBytes(void* buf, ULONG bufSize){
         if(!buf || bufSize == 0) return false;
 
@@ -105,6 +107,7 @@ public:
 
         return BCRYPT_SUCCESS(status);
     }
+#endif
 
     static std::string generateStrongPassword(){
         //TODO: Create actual strong password generation
@@ -112,8 +115,16 @@ public:
 
         std::vector<uint8_t> randomBytes(16);
         std::string password = "";
+#if __WIN32__
 
         getSecureRandomBytes(randomBytes.data(), static_cast<ULONG>(randomBytes.size()));
+#elif __APPLE__
+        int r = SecRandomCopyBytes(kSecRandomDefault, randomBytes.size(), &(randomBytes[0]));
+        if(!r) {
+            std::cout << "Failure to create random bytes!" << std::endl;
+            return "password";
+        }
+#endif
 
         for(uint8_t i : randomBytes){
             password += _alphabet[i % _alphabet.size()];
