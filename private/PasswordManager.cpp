@@ -3,7 +3,10 @@
 displayStruct display;
 
 PasswordManager::PasswordManager(const std::string& fname, const std::string& key, const IPasswordRetriever& retriever, IEncryptionMethod& encryptionmethod) : _key(key), _retriever(retriever), _fm(fname, encryptionmethod){
-    if(!Security::comparePasswords(_fm.readFilePassword(), key)) throw "error";
+    if(!Security::comparePasswords(_fm.readFilePassword(), key)){
+        std::cout << "\nWrong Password!" << std::endl;
+        abort();
+    }
     display.maxDigits = 0;
     display.maxUrl = 0;
     display.maxUsername = 0;
