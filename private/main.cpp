@@ -2,6 +2,7 @@
 #include "../public/PasswordManager.hpp"
 #include "ClipboardRetriever.cpp"
 #include "VigenereMethod.cpp"
+#include "AESMethod.cpp"
 //#include "Security.cpp"
 
 void loop(PasswordManager&);
@@ -36,8 +37,8 @@ int main(int argc, char *argv[]){
     std::cout << "Please enter password: ";
     Security::hideKey(key);
     ClipboardRetriever retriever;
-    VigenereMethod encryptionMethod(key);
-    //AESMethod encryptionMethod(key);
+    //VigenereMethod encryptionMethod(key);
+    AESMethod encryptionMethod(key);
 
     PasswordManager pm(dir.append(fname), key, retriever, encryptionMethod);
 

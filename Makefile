@@ -1,6 +1,6 @@
 # Compiler
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Ipublic
+CXXFLAGS = -std=c++17 -Wall -Wextra -Ipublic -D USE_CXX_AES
 LDFLAGS = -lcrypto -lbcrypt
 
 # Directories
