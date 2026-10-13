@@ -11,8 +11,8 @@ public:
         output.reserve(input.size());
     
         for(size_t i=0; i<input.size(); ++i){
-            uint8_t p = _alphabet.find(input[i]);
-            uint8_t k = _alphabet.find(_key[i%len]);
+            size_t p = _alphabet.find(input[i]);
+            size_t k = _alphabet.find(_key[i%len]);
             if(k==std::string::npos || p ==std::string::npos) {
                 output.push_back(input[i]);
                 continue;
@@ -29,8 +29,8 @@ public:
         output.reserve(input.size());
     
         for(size_t i=0; i<input.size(); ++i){
-            uint8_t p = _alphabet.find(input[i]);
-            uint8_t k = _alphabet.find(_key[i%len]);
+            size_t p = _alphabet.find(input[i]);
+            size_t k = _alphabet.find(_key[i%len]);
             if(k==std::string::npos || p ==std::string::npos) {
                 output.push_back(input[i]);
                 continue;
